@@ -48,7 +48,6 @@ get_gdc_data <- function(project,dataca = "Transcriptome Profiling",
 
 tgca_laml_gene <- get_gdc_data("TCGA-LAML")
 tgca_laml_clinical <- get_gdc_data("TCGA-LAML",dataca = "Clinical")
-clinical_colnames <- colnames(tgca_laml_clinical)
 counts <- as.data.frame(assay(tgca_laml_gene))
 data <- as.data.frame(rowRanges(tgca_laml_gene))#获取其它信息数据
 #这里面就包括注释以及编码、非编码等等信息
