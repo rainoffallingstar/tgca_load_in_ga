@@ -1,0 +1,26 @@
+name: Run R script
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-r-script:
+    runs-on: ubuntu-latest
+    container:
+      image: fallingstar10/hbsigrocker:latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run R script
+      run: ${{secrets.TCGA_PROJECT}}.R
+    
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+            # Artifact name
+          name: ${{secrets.TCGA_PROJECT}} # optional, default is artifact
+          # A file, directory or wildcard pattern that describes what to upload
+          path: data/
+          retention-days: 2 # optional
