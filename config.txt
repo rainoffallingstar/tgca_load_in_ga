@@ -12,6 +12,8 @@ TCGA-LIHC
 "77" "TARGET-ALL-P2"
 # Lymphoma
 
+MANIFEST.txt
+
 # MMRF
 MMRF-COMMPASS
 
