@@ -10,9 +10,8 @@ get_gdc_data <- function(project,dataca = "Transcriptome Profiling",
                          data_type = "Gene Expression Quantification"){
   if (dataca == "Clinical") {
     query_result <- GDCquery(project = project,
-                             data.category = dataca
-                             #,
-                             #file.type = "xml"
+                             data.category = dataca,
+                             data.format = "bcr xml"
                              ) 
     
   } else {
