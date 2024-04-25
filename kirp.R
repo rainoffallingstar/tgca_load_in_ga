@@ -1,58 +1,34 @@
-# download data
+GSE_ID_expre <- c("GSE976","GSE1729","GSE7538","GSE7757",
+                  "GSE8970","GSE9476","GSE10258","GSE11877",
+                  "GSE12326","GSE12662","GSE14062","GSE14468",
+                  "GSE14479","GSE14858","GSE14924","GSE15013",
+                  "GSE15434","GSE16015","GSE17855","GSE18018",
+                  "GSE18673","GSE19577","GSE19681","GSE21261",
+                  "GSE22056","GSE22845","GSE23025","GSE27187",
+                  "GSE29883","GSE30442","GSE33223","GSE34733",
+                  "GSE34860","GSE35784","GSE38987","GSE39363",
+                  "GSE39730","GSE42064","GSE43176","GSE45249",
+                  "GSE110087","GSE111678","GSE169428","GSE46819",
+                  "GSE50928","GSE52478","GSE52891", "GSE56237",
+                  "GSE61804","GSE68172","GSE70124","GSE84334",
+                  "GSE84881","GSE104099","GSE107465","GSE109179",
+                  "GSE130753","GSE1427","GSE2191","GSE4119",
+                  "GSE4608","GSE5122","GSE199452","GSE199451",
+                  "GSE129094","GSE157633","GSE165430","GSE106291",
+                  "GSE86506", "GSE84359","GSE71800","GSE62852",
+                  "GSE48843","GSE199455","GSE142514","GSE108003",
+                  "GSE30029","GSE31941","GSE34577","GSE34594",
+                  "GSE67936","GSE68466","GSE71014","GSE76340",
+                  "GSE127200","GSE19853")
 
-library(TCGAbiolinks)
-library(SummarizedExperiment)
-library(dplyr)
-
-### general gdc load_data workflow
-
-get_gdc_data <- function(project,dataca = "Transcriptome Profiling",
-                         data_type = "Gene Expression Quantification"){
-  if (dataca == "Clinical") {
-    query_result <- GDCquery(project = project,
-                             data.category = dataca,
-                             data.format = "bcr xml"
-                             ) 
-    
-  } else {
-    query_result <- GDCquery(
-      project = project, 
-      data.category = dataca,
-      data.type = data_type,
-      workflow.type = "STAR - Counts"
-    ) # 查询数据
-    process_query <- getResults(query_result ,cols = "cases") 
-    index <- duplicated(process_query)
-    process_query2 <- process_query[!index] # 去除重复的样本数据/患者数据
-    query_result <- GDCquery(
-      project = project, 
-      data.category = dataca,
-      data.type = data_type,
-      workflow.type = "STAR - Counts",
-      barcode = process_query2
-      
-    )
+fs::dir_create("data")
+while(length(list.files("data")) + 1 <= 86) {
+  for (i in 1:length(GSE_ID_expre)){
+    message(glue::glue("processing {GSE_ID_expre[i]}"))
+    if (!file.exists(paste0("data/",GSE_ID_expre[i],".RDS"))){
+      exprdata <- erebor::MoriaClass$new(GSE_ID_expre[i],"GEO")
+      exprdata <- exprdata$download()
+      saveRDS(methydata,file = paste0("data/",GSE_ID_expre[i],".RDS"))
+    }
   }
-  
-  GDCdownload(query_result,method="api")
-  if (dataca == "Clinical") {
-    data_pre <- GDCprepare_clinic(query_result, clinical.info = "patient")
-    
-  } else {
-    data_pre <- GDCprepare(query_result)
-  }
-  return(data_pre)
-  
 }
-
-# load TGCA-LAML
-
-tgca_laml_gene <- get_gdc_data("TCGA-KIRP")
-tgca_laml_clinical <- get_gdc_data("TCGA-KIRP",dataca = "Clinical")
-counts <- as.data.frame(assay(tgca_laml_gene))
-data <- as.data.frame(rowRanges(tgca_laml_gene))#获取其它信息数据
-#这里面就包括注释以及编码、非编码等等信息
-expr_count = cbind(gene_type=data$gene_type,gene_name=data$gene_name,counts)
-save.image("data/images.RData")
-write.table(expr_count,"expr_count.csv")
-write.table(tgca_laml_clinical,"clinical.csv")
