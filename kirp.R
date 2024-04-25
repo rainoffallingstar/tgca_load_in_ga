@@ -1,3 +1,4 @@
+pak::pak("rainoffallingstar/erebor")
 GSE_ID_expre <- c("GSE976","GSE1729","GSE7538","GSE7757",
                   "GSE8970","GSE9476","GSE10258","GSE11877",
                   "GSE12326","GSE12662","GSE14062","GSE14468",
