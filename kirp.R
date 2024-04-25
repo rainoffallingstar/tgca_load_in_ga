@@ -29,7 +29,7 @@ while(length(list.files("data")) + 1 <= 86) {
     if (!file.exists(paste0("data/",GSE_ID_expre[i],".RDS"))){
       exprdata <- erebor::MoriaClass$new(GSE_ID_expre[i],"GEO")
       exprdata <- exprdata$download()
-      saveRDS(methydata,file = paste0("data/",GSE_ID_expre[i],".RDS"))
+      saveRDS(exprdata,file = paste0("data/",GSE_ID_expre[i],".RDS"))
     }
   }
 }
