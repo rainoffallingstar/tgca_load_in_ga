@@ -12,4 +12,4 @@ tiny_download <- function(dir = "data",GSE_ID_expre){
     }
   }
 }
-tiny_download("data",na.moit(hsct_geo))
+tiny_download("data",na.omit(hsct_geo))
