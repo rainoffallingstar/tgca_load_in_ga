@@ -12,4 +12,6 @@ tiny_download <- function(dir = "data",GSE_ID_expre){
     }
   }
 }
-tiny_download("data",na.omit(mm_geo))
+mm_geo <- mm_geo[!grepl("GSE136400",mm_geo)]
+mm_geo <- na.omit(mm_geo)
+tiny_download("data",mm_geo[641:779])
