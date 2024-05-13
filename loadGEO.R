@@ -1,4 +1,6 @@
 # download data
+pak::pak("GEOquery")
+pak::pak("fs")
 get_metadata <- function(mine){
   fs::dir_create("temp")
   fs::dir_create("data")
