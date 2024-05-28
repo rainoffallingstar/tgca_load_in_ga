@@ -47,12 +47,13 @@ get_gdc_data <- function(project,dataca = "Transcriptome Profiling",
 
 # load TGCA-LAML
 
-tgca_laml_gene <- get_gdc_data("TCGA-KICH")
-tgca_laml_clinical <- get_gdc_data("TCGA-KICH",dataca = "Clinical")
+tgca_laml_gene <- get_gdc_data("TCGA-LAML")
+tgca_laml_clinical <- get_gdc_data("TCGA-LAML",dataca = "Clinical")
 counts <- as.data.frame(assay(tgca_laml_gene))
 data <- as.data.frame(rowRanges(tgca_laml_gene))#获取其它信息数据
 #这里面就包括注释以及编码、非编码等等信息
 expr_count = cbind(gene_type=data$gene_type,gene_name=data$gene_name,counts)
+saveRDS(tgca_laml_clinical,"data/tgca_laml_clinical.RDS")
 save.image("data/images.RData")
 write.table(expr_count,"expr_count.csv")
 write.table(tgca_laml_clinical,"clinical.csv")
